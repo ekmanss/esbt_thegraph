@@ -24,6 +24,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             account.address = event.params._fromAccount.toHex()
             account.createdTimestamp = event.block.timestamp
             account.sons = []
+            account.pointHistory = []
 
             account.save()
         }
