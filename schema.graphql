@@ -4,3 +4,20 @@ type ExampleEntity @entity {
   owner: Bytes! # address
   approved: Bytes! # address
 }
+
+type Account @entity {
+  id: ID!
+  createdTimestamp: BigInt!
+  address: String!
+  parent: Account!
+  sons: [Account!]!
+  pointHistory: [PointHistory!]!
+}
+
+type PointHistory @entity {
+  id: ID!
+  timestamp: BigInt!
+  point: BigInt!
+  account: Account!
+  typeCode: String!
+}
