@@ -45,7 +45,9 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
 
 
 
-        account.sons.push(newMemberAddress)
+        let accountSonsList = account.sons
+        accountSonsList.push(newMemberAddress)
+        account.sons = accountSonsList
         account.save()
 
         newMember.save()
