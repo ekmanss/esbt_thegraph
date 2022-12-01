@@ -71,9 +71,23 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         pointHistory.typeCode = reasonCode
 
 
+        let addScoreToAccount = Account.load(addScoreToAddress)
+        if(addScoreToAccount === null){
+            addScoreToAccount = new Account(addScoreToAddress)
+            addScoreToAccount.createdTimestamp = event.block.timestamp
+            addScoreToAccount.address = addScoreToAddress
+            addScoreToAccount.parent = addScoreToAddress
+            addScoreToAccount.sons = []
+            addScoreToAccount.pointHistory = []
+        }
+        let pointHistoryList = addScoreToAccount.pointHistory
+        pointHistoryList.push(pointHistory.id)
+        addScoreToAccount.pointHistory = pointHistoryList
+
 
 
 
         pointHistory.save()
+        addScoreToAccount.save()
     }
 }
