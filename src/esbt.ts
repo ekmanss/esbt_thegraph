@@ -25,7 +25,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         if (account === null) {
             log.info("##########create refCodeOwner :{}", [event.params._account.toHex()]);
             account = new Account(refCodeOwnerAddress)
-            account.parent = ""
+            account.parent = refCodeOwnerAddress
             account.address = refCodeOwnerAddress
             account.createdTimestamp = event.block.timestamp
             account.sons = []
