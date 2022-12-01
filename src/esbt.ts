@@ -52,5 +52,8 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
 
         newMember.save()
 
+    }else {
+
+
     }
 }
