@@ -16,6 +16,7 @@ type Account @entity {
 
 type PointHistory @entity {
   id: ID!
+  increase: Boolean
   timestamp: String!
   point: String!
   account: Account!

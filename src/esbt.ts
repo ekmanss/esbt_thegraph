@@ -2,6 +2,7 @@ import {BigInt, log} from "@graphprotocol/graph-ts"
 import {
     ESBT,
     ScoreUpdate,
+    ScoreDecrease
 } from "../generated/ESBT/ESBT"
 import {ExampleEntity,Account,PointHistory} from "../generated/schema"
 
@@ -55,9 +56,6 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
     }else {
 
         //add score
-
-        log.info("#####################add score", []);
-
         let reasonCode = event.params._reasonCode.toString()
         let addScoreToAddress = event.params._account.toHex()
         let score = event.params._addition.toString()
@@ -65,6 +63,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
 
 
         let pointHistory = new PointHistory(addScoreToAddress.concat("-").concat(event.block.timestamp.toString()))
+        pointHistory.increase = true
         pointHistory.timestamp = event.block.timestamp.toString()
         pointHistory.point = score
         pointHistory.account = addScoreToAddress
@@ -90,4 +89,38 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         pointHistory.save()
         addScoreToAccount.save()
     }
+}
+
+
+export function handleScoreDecrease(event: ScoreDecrease): void {
+
+    let addScoreToAddress = event.params._account.toHex()
+    let score = event.params._amount.toString()
+
+    log.info("#####################decrease score: addScoreToAddress = {} ,  score = {}", [addScoreToAddress,score]);
+    let pointHistory = new PointHistory(addScoreToAddress.concat("-").concat(event.block.timestamp.toString()))
+    pointHistory.increase = false
+    pointHistory.timestamp = event.block.timestamp.toString()
+    pointHistory.point = score
+    pointHistory.account = addScoreToAddress
+    pointHistory.typeCode = "999"
+
+
+    let addScoreToAccount = Account.load(addScoreToAddress)
+    if(addScoreToAccount === null){
+        addScoreToAccount = new Account(addScoreToAddress)
+        addScoreToAccount.createdTimestamp = event.block.timestamp
+        addScoreToAccount.address = addScoreToAddress
+        addScoreToAccount.parent = addScoreToAddress
+        addScoreToAccount.sons = []
+        addScoreToAccount.pointHistory = []
+    }
+    let pointHistoryList = addScoreToAccount.pointHistory
+    pointHistoryList.push(pointHistory.id)
+    addScoreToAccount.pointHistory = pointHistoryList
+
+    pointHistory.save()
+    addScoreToAccount.save()
+
+
 }

@@ -26,6 +26,8 @@ dataSources:
         - name: ESBT
           file: ./abis/ESBT.json
       eventHandlers:
+        - event: ScoreDecrease(address,uint256,uint256)
+          handler: handleScoreDecrease
         - event: ScoreUpdate(address,address,uint256,uint256)
           handler: handleScoreUpdate
       file: ./src/esbt.ts
