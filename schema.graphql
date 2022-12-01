@@ -16,8 +16,8 @@ type Account @entity {
 
 type PointHistory @entity {
   id: ID!
-  timestamp: BigInt!
-  point: BigInt!
+  timestamp: String!
+  point: String!
   account: Account!
   typeCode: String!
 }
