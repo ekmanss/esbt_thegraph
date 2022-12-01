@@ -19,6 +19,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
 
         let account = Account.load(event.params._account.toHex())
         if (account === null) {
+            log.info("#####################account is null:{}", [event.params._account.toHex()]);
             account = new Account(event.params._account.toHex())
             account.parent = event.params._account.toHex()
             account.address = event.params._fromAccount.toHex()
