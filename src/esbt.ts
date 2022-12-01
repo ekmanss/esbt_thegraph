@@ -16,21 +16,39 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
                 event.params._addition.toString(),
             ]
         )
+        let refCodeOwnerAddress = event.params._account.toHex()
+        let newMemberAddress =  event.params._fromAccount.toHex()
 
-        let account = Account.load(event.params._account.toHex())
+
+
+        let account = Account.load(refCodeOwnerAddress)
         if (account === null) {
-            log.info("#####################account is null:{}", [event.params._account.toHex()]);
-            account = new Account(event.params._account.toHex())
-            account.parent = event.params._account.toHex()
-            account.address = event.params._fromAccount.toHex()
+            log.info("##########create refCodeOwner :{}", [event.params._account.toHex()]);
+            account = new Account(refCodeOwnerAddress)
+            account.parent = ""
+            account.address = refCodeOwnerAddress
             account.createdTimestamp = event.block.timestamp
             account.sons = []
             account.pointHistory = []
+        }
 
-            account.save()
+        let newMember = Account.load(event.params._fromAccount.toHex())
+        if(newMember === null){
+            log.info("##########create newMember :{}", [event.params._account.toHex()]);
+            newMember = new Account(event.params._fromAccount.toHex())
+            newMember.parent = refCodeOwnerAddress
+            newMember.address = newMemberAddress
+            newMember.createdTimestamp = event.block.timestamp
+            newMember.sons = []
+            newMember.pointHistory = []
         }
 
 
+
+        account.sons.push(newMemberAddress)
+        account.save()
+
+        newMember.save()
 
     }
 }
