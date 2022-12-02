@@ -48,6 +48,20 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
 
         let accountSonsList = account.sons
         accountSonsList.push(newMemberAddress)
+
+        let pointHistory = new PointHistory(refCodeOwnerAddress.concat("-").concat(event.block.timestamp.toString()))
+        pointHistory.increase = true
+        pointHistory.timestamp = event.block.timestamp.toString()
+        pointHistory.point = "10000000000000000000"
+        pointHistory.account = newMemberAddress
+        pointHistory.typeCode = "0"
+
+        let accountPointHistoryList = account.pointHistory
+        accountPointHistoryList.push(pointHistory.id)
+        account.pointHistory = accountPointHistoryList
+
+
+
         account.sons = accountSonsList
         account.save()
 
@@ -58,6 +72,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         //add score
         let reasonCode = event.params._reasonCode.toString()
         let addScoreToAddress = event.params._account.toHex()
+        let fromAddress = event.params._fromAccount.toHex()
         let score = event.params._addition.toString()
         log.info("#####################add score: reasonCode = {}, addScoreTo = {} ,  score = {}", [reasonCode,addScoreToAddress,score]);
 
@@ -66,7 +81,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         pointHistory.increase = true
         pointHistory.timestamp = event.block.timestamp.toString()
         pointHistory.point = score
-        pointHistory.account = addScoreToAddress
+        pointHistory.account = fromAddress
         pointHistory.typeCode = reasonCode
 
 
@@ -82,8 +97,6 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         let pointHistoryList = addScoreToAccount.pointHistory
         pointHistoryList.push(pointHistory.id)
         addScoreToAccount.pointHistory = pointHistoryList
-
-
 
 
         pointHistory.save()
