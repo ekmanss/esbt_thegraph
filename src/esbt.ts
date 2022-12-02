@@ -48,24 +48,24 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         }
 
 
-        // let accountSonsList = account.sons
-        // accountSonsList.push(newMemberAddress)
-        // account.sons = accountSonsList
-        //
-        // let pointHistory = new PointHistory(refCodeOwnerAddress.concat("-").concat(timestamp.toString()))
-        // pointHistory.increase = true
-        // pointHistory.timestamp = timestamp.toString()
-        // pointHistory.point = "10000000000000000000"
-        // pointHistory.account = newMemberAddress
-        // pointHistory.typeCode = "0"
-        //
-        // let accountPointHistoryList = account.pointHistory
-        // accountPointHistoryList.push(pointHistory.id)
-        // account.pointHistory = accountPointHistoryList
-        //
-        // account.save()
-        // newMember.save()
-        // pointHistory.save()
+        let accountSonsList = account.sons
+        accountSonsList.push(newMemberAddress)
+        account.sons = accountSonsList
+
+        let pointHistory = new PointHistory(refCodeOwnerAddress.concat("-").concat(timestamp.toString()))
+        pointHistory.increase = true
+        pointHistory.timestamp = timestamp.toString()
+        pointHistory.point = "10000000000000000000"
+        pointHistory.account = newMemberAddress
+        pointHistory.typeCode = "0"
+
+        let accountPointHistoryList = account.pointHistory
+        accountPointHistoryList.push(pointHistory.id)
+        account.pointHistory = accountPointHistoryList
+
+        account.save()
+        newMember.save()
+        pointHistory.save()
 
 
     }else {
