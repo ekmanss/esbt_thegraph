@@ -8,15 +8,15 @@ import {ExampleEntity,Account,PointHistory} from "../generated/schema"
 
 export function handleScoreUpdate(event: ScoreUpdate): void {
     if (event.params._reasonCode.equals(BigInt.fromI32(0))) {
-        // log.info("#####################ScoreUpdate: _reasonCode = 0", []);
-        // log.info(
-        //     "#####################refCodeOwner: {} , newMember: {} , initPoint: {}",
-        //     [
-        //         event.params._account.toHex(),
-        //         event.params._fromAccount.toHex(),
-        //         event.params._addition.toString(),
-        //     ]
-        // )
+        log.info("#####################ScoreUpdate: _reasonCode = 0", []);
+        log.info(
+            "#####################refCodeOwner: {} , newMember: {} , initPoint: {}",
+            [
+                event.params._account.toHex(),
+                event.params._fromAccount.toHex(),
+                event.params._addition.toString(),
+            ]
+        )
         let refCodeOwnerAddress = event.params._account.toHex()
         let newMemberAddress =  event.params._fromAccount.toHex()
 
@@ -33,10 +33,10 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             account.pointHistory = []
         }
 
-        let newMember = Account.load(event.params._fromAccount.toHex())
+        let newMember = Account.load(newMemberAddress)
         if(newMember === null){
             // log.info("##########create newMember :{}", [event.params._account.toHex()]);
-            newMember = new Account(event.params._fromAccount.toHex())
+            newMember = new Account(newMemberAddress)
             newMember.parent = refCodeOwnerAddress
             newMember.address = newMemberAddress
             newMember.createdTimestamp = event.block.timestamp
@@ -62,9 +62,9 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         account.pointHistory = accountPointHistoryList
 
 
+        newMember.save()
         pointHistory.save()
         account.save()
-        newMember.save()
 
     }else {
 
@@ -73,7 +73,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         let addScoreToAddress = event.params._account.toHex()
         let fromAddress = event.params._fromAccount.toHex()
         let score = event.params._addition.toString()
-        log.info("#####################add score: reasonCode = {}, addScoreTo = {} ,  score = {}", [reasonCode,addScoreToAddress,score]);
+        // log.info("#####################add score: reasonCode = {}, addScoreTo = {} ,  score = {}", [reasonCode,addScoreToAddress,score]);
 
 
         let pointHistory = new PointHistory(addScoreToAddress.concat("-").concat(event.block.timestamp.toString()))
