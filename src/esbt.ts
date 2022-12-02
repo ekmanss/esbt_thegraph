@@ -33,17 +33,17 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             account.pointHistory = []
         }
 
-        let newMember = Account.load(newMemberAddress)
+        let newMember = Account.load(event.params._fromAccount.toHex())
         if(newMember === null){
             // log.info("##########create newMember :{}", [event.params._account.toHex()]);
-            newMember = new Account(newMemberAddress)
-            newMember.parent = refCodeOwnerAddress
-            newMember.address = newMemberAddress
+            newMember = new Account(event.params._fromAccount.toHex())
+            newMember.parent = event.params._account.toHex()
+            newMember.address = event.params._fromAccount.toHex()
             newMember.createdTimestamp = event.block.timestamp
             newMember.sons = []
             newMember.pointHistory = []
         }
-
+        newMember.save()
 
 
         let accountSonsList = account.sons
@@ -62,7 +62,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         account.pointHistory = accountPointHistoryList
 
 
-        newMember.save()
+
         pointHistory.save()
         account.save()
 
