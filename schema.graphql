@@ -12,6 +12,7 @@ type Account @entity {
   parent: Account!
   sons: [Account!]!
   pointHistory: [PointHistory!]!
+  invitedTimestamp: String!
 }
 
 type PointHistory @entity {
