@@ -48,6 +48,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
 
         let accountSonsList = account.sons
         accountSonsList.push(newMemberAddress)
+        account.sons = accountSonsList
 
         let pointHistory = new PointHistory(refCodeOwnerAddress.concat("-").concat(event.block.timestamp.toString()))
         pointHistory.increase = true
@@ -61,10 +62,8 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         account.pointHistory = accountPointHistoryList
 
 
-
-        account.sons = accountSonsList
+        pointHistory.save()
         account.save()
-
         newMember.save()
 
     }else {
