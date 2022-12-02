@@ -59,7 +59,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         accountSonsList.push(newMemberAddress)
         account.sons = accountSonsList
 
-        let pointHistory = new PointHistory(refCodeOwnerAddress.concat("-").concat(timestamp.toString()))
+        let pointHistory = new PointHistory(refCodeOwnerAddress.concat("-").concat(timestamp.toString()).concat("-").concat(newMemberAddress))
         pointHistory.increase = true
         pointHistory.timestamp = timestamp
         pointHistory.point = "10000000000000000000"
@@ -85,7 +85,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         // log.info("#####################add score: reasonCode = {}, addScoreTo = {} ,  score = {}", [reasonCode,addScoreToAddress,score]);
 
 
-        let pointHistory = new PointHistory(addScoreToAddress.concat("-").concat(event.block.timestamp.toString()))
+        let pointHistory = new PointHistory(addScoreToAddress.concat("-").concat(event.block.timestamp.toString()).concat("-").concat(score).concat("-").concat(reasonCode))
         pointHistory.increase = true
         pointHistory.timestamp = event.block.timestamp.toString()
         pointHistory.point = score
@@ -121,7 +121,7 @@ export function handleScoreDecrease(event: ScoreDecrease): void {
     const timestamp = event.block.timestamp.toString()
 
     log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!decrease score: addScoreToAddress = {} ,  score = {}", [addScoreToAddress,score]);
-    let pointHistory = new PointHistory(addScoreToAddress.concat("-").concat(timestamp))
+    let pointHistory = new PointHistory(addScoreToAddress.concat("-").concat(timestamp).concat("-").concat(score))
     pointHistory.increase = false
     pointHistory.timestamp = timestamp
     pointHistory.point = score
