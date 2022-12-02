@@ -7,7 +7,7 @@ type ExampleEntity @entity {
 
 type Account @entity {
   id: ID!
-  createdTimestamp: BigInt!
+  createdTimestamp: String!
   address: String!
   parent: Account!
   sons: [Account!]!

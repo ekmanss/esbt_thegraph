@@ -17,9 +17,9 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
                 event.params._addition.toString(),
             ]
         )
-        let refCodeOwnerAddress = event.params._account.toHex()
-        let newMemberAddress =  event.params._fromAccount.toHex()
-        let timestamp = event.block.timestamp
+        const refCodeOwnerAddress = event.params._account.toHex()
+        const newMemberAddress =  event.params._fromAccount.toHex()
+        const timestamp = event.block.timestamp.toString()
 
 
 
@@ -107,34 +107,34 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
 
 
 export function handleScoreDecrease(event: ScoreDecrease): void {
-
-    let addScoreToAddress = event.params._account.toHex()
-    let score = event.params._amount.toString()
-
-    log.info("#####################decrease score: addScoreToAddress = {} ,  score = {}", [addScoreToAddress,score]);
-    let pointHistory = new PointHistory(addScoreToAddress.concat("-").concat(event.block.timestamp.toString()))
-    pointHistory.increase = false
-    pointHistory.timestamp = event.block.timestamp.toString()
-    pointHistory.point = score
-    pointHistory.account = addScoreToAddress
-    pointHistory.typeCode = "999"
-
-
-    let addScoreToAccount = Account.load(addScoreToAddress)
-    if(addScoreToAccount === null){
-        addScoreToAccount = new Account(addScoreToAddress)
-        addScoreToAccount.createdTimestamp = event.block.timestamp
-        addScoreToAccount.address = addScoreToAddress
-        addScoreToAccount.parent = addScoreToAddress
-        addScoreToAccount.sons = []
-        addScoreToAccount.pointHistory = []
-    }
-    let pointHistoryList = addScoreToAccount.pointHistory
-    pointHistoryList.push(pointHistory.id)
-    addScoreToAccount.pointHistory = pointHistoryList
-
-    pointHistory.save()
-    addScoreToAccount.save()
+    //
+    // let addScoreToAddress = event.params._account.toHex()
+    // let score = event.params._amount.toString()
+    //
+    // log.info("#####################decrease score: addScoreToAddress = {} ,  score = {}", [addScoreToAddress,score]);
+    // let pointHistory = new PointHistory(addScoreToAddress.concat("-").concat(event.block.timestamp.toString()))
+    // pointHistory.increase = false
+    // pointHistory.timestamp = event.block.timestamp.toString()
+    // pointHistory.point = score
+    // pointHistory.account = addScoreToAddress
+    // pointHistory.typeCode = "999"
+    //
+    //
+    // let addScoreToAccount = Account.load(addScoreToAddress)
+    // if(addScoreToAccount === null){
+    //     addScoreToAccount = new Account(addScoreToAddress)
+    //     addScoreToAccount.createdTimestamp = event.block.timestamp.toString()
+    //     addScoreToAccount.address = addScoreToAddress
+    //     addScoreToAccount.parent = addScoreToAddress
+    //     addScoreToAccount.sons = []
+    //     addScoreToAccount.pointHistory = []
+    // }
+    // let pointHistoryList = addScoreToAccount.pointHistory
+    // pointHistoryList.push(pointHistory.id)
+    // addScoreToAccount.pointHistory = pointHistoryList
+    //
+    // pointHistory.save()
+    // addScoreToAccount.save()
 
 
 }
