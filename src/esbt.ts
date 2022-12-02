@@ -43,7 +43,8 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             newMember.sons = []
             newMember.pointHistory = []
         }
-        newMember.save()
+
+
 
 
         let accountSonsList = account.sons
@@ -61,10 +62,10 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         accountPointHistoryList.push(pointHistory.id)
         account.pointHistory = accountPointHistoryList
 
-
-
-        pointHistory.save()
         account.save()
+        newMember.save()
+        pointHistory.save()
+
 
     }else {
 
