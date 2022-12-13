@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: ESBT
-    network: Binance
+    network: bsc
     source:
-      address: "0xC03668Dfe2141B99671a630d1ED37651e0615fC4"
+      address: "0x70d9c5473D8cFf115E0213B20fd2eEE61F46F877"
       abi: ESBT
-      startBlock: 25210170
+      startBlock: 23721450
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
