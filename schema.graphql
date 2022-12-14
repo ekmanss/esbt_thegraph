@@ -25,7 +25,7 @@ type PointHistory @entity {
   typeCode: String!
 }
 
-type Commondata @entity {
+type CommonDataStore @entity {
   id: ID!
   value: String!
 }

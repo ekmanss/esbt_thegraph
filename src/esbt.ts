@@ -4,20 +4,24 @@ import {
     ScoreUpdate,
     ScoreDecrease
 } from "../generated/ESBT/ESBT"
-import {ExampleEntity,Account,PointHistory, Commondata} from "../generated/schema"
+import {ExampleEntity,Account,PointHistory, CommonDataStore} from "../generated/schema"
 
 export function handleScoreUpdate(event: ScoreUpdate): void {
     const timestamp = event.block.timestamp.toString()
 
     if (event.params._reasonCode.equals(BigInt.fromI32(0))) {
-        let totalMintedCounter = Commondata.load("totalMintedCounter")
+        let totalMintedCounter = CommonDataStore.load("totalMintedCounter")
         if(totalMintedCounter === null){
-            totalMintedCounter = new Commondata("totalMintedCounter")
+            totalMintedCounter = new CommonDataStore("totalMintedCounter")
             totalMintedCounter.value = "0"
 
             totalMintedCounter.save()
+        }else {
+            totalMintedCounter.value = BigInt.fromString(totalMintedCounter.value).plus(BigInt.fromI32(1)).toString()
+
+            totalMintedCounter.save()
         }
-        totalMintedCounter.value = BigInt.fromString(totalMintedCounter.value).plus(BigInt.fromI32(1)).toString()
+
 
 
 
@@ -84,7 +88,6 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         let newTotalPoints = (BigInt.fromString("10000000000000000000").plus(BigInt.fromString(account.totalPoints))).toString()
         account.totalPoints = newTotalPoints
 
-        totalMintedCounter.save()
         account.save()
         newMember.save()
         pointHistory.save()
