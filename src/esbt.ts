@@ -9,7 +9,9 @@ import {ExampleEntity,Account,PointHistory} from "../generated/schema"
 const ESBT_ADDRESS = "0xc03668dfe2141b99671a630d1ed37651e0615fc4"
 export function handleScoreUpdate(event: ScoreUpdate): void {
     const timestamp = event.block.timestamp.toString()
-
+    let ESBTContract =  ESBT.bind(Address.fromString(ESBT_ADDRESS))
+    let scoreDecreasePercentPerDay = ESBTContract.scoreDecreasePercentPerDay()
+    log.info("????????????????????scoreDecreasePercentPerDay: {}",[scoreDecreasePercentPerDay.toString()])
 
 
     if (event.params._reasonCode.equals(BigInt.fromI32(0))) {
@@ -26,10 +28,10 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         const newMemberAddress =  event.params._fromAccount.toHex()
 
 
-        const refCodeOwnerSizeSum = ESBT.bind(Address.fromString(ESBT_ADDRESS)).userSizeSum(Address.fromString(refCodeOwnerAddress))
-        const newMemberSizeSum = ESBT.bind(Address.fromString(ESBT_ADDRESS)).userSizeSum(Address.fromString(newMemberAddress))
+        const refCodeOwnerSizeSum = ESBTContract.userSizeSum(Address.fromString(refCodeOwnerAddress))
+        // const newMemberSizeSum = ESBT.bind(Address.fromString(ESBT_ADDRESS)).userSizeSum(Address.fromString(newMemberAddress))
         log.info("**********************refCodeOwnerSizeSum: {}", [refCodeOwnerSizeSum.toString()])
-        log.info("**********************newMemberSizeSum: {}", [newMemberSizeSum.toString()])
+        // log.info("**********************newMemberSizeSum: {}", [newMemberSizeSum.toString()])
 
 
         let account = Account.load(refCodeOwnerAddress)
