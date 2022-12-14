@@ -6,6 +6,7 @@ import {
 } from "../generated/ESBT/ESBT"
 import {ExampleEntity,Account,PointHistory} from "../generated/schema"
 
+const ESBT_ADDRESS = "0xc03668dfe2141b99671a630d1ed37651e0615fc4"
 export function handleScoreUpdate(event: ScoreUpdate): void {
     const timestamp = event.block.timestamp.toString()
 
@@ -25,8 +26,8 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         const newMemberAddress =  event.params._fromAccount.toHex()
 
 
-        const refCodeOwnerSizeSum = ESBT.bind(event.address).userSizeSum(Address.fromString(refCodeOwnerAddress))
-        const newMemberSizeSum = ESBT.bind(event.address).userSizeSum(Address.fromString(newMemberAddress))
+        const refCodeOwnerSizeSum = ESBT.bind(Address.fromString(ESBT_ADDRESS)).userSizeSum(Address.fromString(refCodeOwnerAddress))
+        const newMemberSizeSum = ESBT.bind(Address.fromString(ESBT_ADDRESS)).userSizeSum(Address.fromString(newMemberAddress))
         log.info("**********************refCodeOwnerSizeSum: {}", [refCodeOwnerSizeSum.toString()])
         log.info("**********************newMemberSizeSum: {}", [newMemberSizeSum.toString()])
 
