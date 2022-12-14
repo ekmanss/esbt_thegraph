@@ -107,6 +107,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         let pointHistoryList = addScoreToAccount.pointHistory
         pointHistoryList.push(pointHistory.id)
         addScoreToAccount.pointHistory = pointHistoryList
+        addScoreToAccount.totalPoints = (BigInt.fromString(score).plus(BigInt.fromString(addScoreToAccount.totalPoints))).toString()
 
 
         pointHistory.save()
