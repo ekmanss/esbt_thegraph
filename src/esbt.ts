@@ -14,6 +14,8 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         if(totalMintedCounter === null){
             totalMintedCounter = new Commondata("totalMintedCounter")
             totalMintedCounter.value = "0"
+
+            totalMintedCounter.save()
         }
         totalMintedCounter.value = BigInt.fromString(totalMintedCounter.value).plus(BigInt.fromI32(1)).toString()
 
