@@ -13,7 +13,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         let totalMintedCounter = CommonDataStore.load("totalMintedCounter")
         if(totalMintedCounter === null){
             totalMintedCounter = new CommonDataStore("totalMintedCounter")
-            totalMintedCounter.value = "0"
+            totalMintedCounter.value = "1"
 
             totalMintedCounter.save()
         }else {
