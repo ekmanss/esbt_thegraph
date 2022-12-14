@@ -70,7 +70,8 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         let accountPointHistoryList = account.pointHistory
         accountPointHistoryList.push(pointHistory.id)
         account.pointHistory = accountPointHistoryList
-        account.totalPoints = (BigInt.fromString("10000000000000000000").plus(BigInt.fromString(account.totalPoints))).toString()
+        let newTotalPoints = (BigInt.fromString("10000000000000000000").plus(BigInt.fromString(account.totalPoints))).toString()
+        account.totalPoints = newTotalPoints
 
         account.save()
         newMember.save()
@@ -143,7 +144,8 @@ export function handleScoreDecrease(event: ScoreDecrease): void {
     let pointHistoryList = addScoreToAccount.pointHistory
     pointHistoryList.push(pointHistory.id)
     addScoreToAccount.pointHistory = pointHistoryList
-    addScoreToAccount.totalPoints = BigInt.fromString(addScoreToAccount.totalPoints).minus(BigInt.fromString(score)).toString()
+    let newTotalPoints = BigInt.fromString(addScoreToAccount.totalPoints).minus(BigInt.fromString(score)).toString()
+    addScoreToAccount.totalPoints = newTotalPoints
 
     pointHistory.save()
     addScoreToAccount.save()
