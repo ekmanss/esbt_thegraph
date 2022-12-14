@@ -24,3 +24,8 @@ type PointHistory @entity {
   account: Account!
   typeCode: String!
 }
+
+type Commondata @entity {
+  id: ID!
+  value: String!
+}

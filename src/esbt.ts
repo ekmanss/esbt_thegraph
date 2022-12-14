@@ -4,12 +4,20 @@ import {
     ScoreUpdate,
     ScoreDecrease
 } from "../generated/ESBT/ESBT"
-import {ExampleEntity,Account,PointHistory} from "../generated/schema"
+import {ExampleEntity,Account,PointHistory, Commondata} from "../generated/schema"
 
 export function handleScoreUpdate(event: ScoreUpdate): void {
     const timestamp = event.block.timestamp.toString()
 
     if (event.params._reasonCode.equals(BigInt.fromI32(0))) {
+        let totalMintedCounter = Commondata.load("totalMintedCounter")
+        if(totalMintedCounter === null){
+            totalMintedCounter = new Commondata("totalMintedCounter")
+            totalMintedCounter.value = "0"
+        }
+        totalMintedCounter.value = BigInt.fromString(totalMintedCounter.value).plus(BigInt.fromI32(1)).toString()
+
+
         log.info("#####################ScoreUpdate: _reasonCode = 0", []);
         log.info(
             "#####################refCodeOwner: {} , newMember: {} , initPoint: {}",
