@@ -18,6 +18,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         totalMintedCounter.value = BigInt.fromString(totalMintedCounter.value).plus(BigInt.fromI32(1)).toString()
 
 
+
         log.info("#####################ScoreUpdate: _reasonCode = 0", []);
         log.info(
             "#####################refCodeOwner: {} , newMember: {} , initPoint: {}",
@@ -81,6 +82,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         let newTotalPoints = (BigInt.fromString("10000000000000000000").plus(BigInt.fromString(account.totalPoints))).toString()
         account.totalPoints = newTotalPoints
 
+        totalMintedCounter.save()
         account.save()
         newMember.save()
         pointHistory.save()
