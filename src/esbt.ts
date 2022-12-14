@@ -6,12 +6,12 @@ import {
 } from "../generated/ESBT/ESBT"
 import {ExampleEntity,Account,PointHistory} from "../generated/schema"
 
-const ESBT_ADDRESS = "0xc03668dfe2141b99671a630d1ed37651e0615fc4"
+export let ESBT_ADDRESS = "0xc03668dfe2141b99671a630d1ed37651e0615fc4"
 export function handleScoreUpdate(event: ScoreUpdate): void {
     const timestamp = event.block.timestamp.toString()
     let ESBTContract =  ESBT.bind(Address.fromString(ESBT_ADDRESS))
-    let scoreDecreasePercentPerDay = ESBTContract.scoreDecreasePercentPerDay()
-    log.info("????????????????????scoreDecreasePercentPerDay: {}",[scoreDecreasePercentPerDay.toString()])
+    let scoreDecreasePercentPerDay = ESBTContract.try_scoreDecreasePercentPerDay()
+    log.info("????????????????????scoreDecreasePercentPerDay: {}",[scoreDecreasePercentPerDay.value.toString()])
 
 
     if (event.params._reasonCode.equals(BigInt.fromI32(0))) {
