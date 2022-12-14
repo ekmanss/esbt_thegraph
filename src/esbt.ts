@@ -1,4 +1,4 @@
-import {BigInt, log} from "@graphprotocol/graph-ts"
+import {Address, BigInt, log} from "@graphprotocol/graph-ts"
 import {
     ESBT,
     ScoreUpdate,
@@ -8,6 +8,8 @@ import {ExampleEntity,Account,PointHistory} from "../generated/schema"
 
 export function handleScoreUpdate(event: ScoreUpdate): void {
     const timestamp = event.block.timestamp.toString()
+
+
 
     if (event.params._reasonCode.equals(BigInt.fromI32(0))) {
         log.info("#####################ScoreUpdate: _reasonCode = 0", []);
@@ -23,6 +25,10 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         const newMemberAddress =  event.params._fromAccount.toHex()
 
 
+        const refCodeOwnerSizeSum = ESBT.bind(event.address).userSizeSum(Address.fromString(refCodeOwnerAddress))
+        const newMemberSizeSum = ESBT.bind(event.address).userSizeSum(Address.fromString(newMemberAddress))
+        log.info("**********************refCodeOwnerSizeSum: {}", [refCodeOwnerSizeSum.toString()])
+        log.info("**********************newMemberSizeSum: {}", [newMemberSizeSum.toString()])
 
 
         let account = Account.load(refCodeOwnerAddress)
