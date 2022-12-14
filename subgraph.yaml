@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: ESBT
-    network: chapel
+    network: Binance
     source:
       address: "0xC03668Dfe2141B99671a630d1ED37651e0615fC4"
       abi: ESBT
