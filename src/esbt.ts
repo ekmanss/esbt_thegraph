@@ -6,13 +6,8 @@ import {
 } from "../generated/ESBT/ESBT"
 import {ExampleEntity,Account,PointHistory} from "../generated/schema"
 
-export let ESBT_ADDRESS = "0xc03668dfe2141b99671a630d1ed37651e0615fc4"
 export function handleScoreUpdate(event: ScoreUpdate): void {
     const timestamp = event.block.timestamp.toString()
-    let ESBTContract =  ESBT.bind(Address.fromString(ESBT_ADDRESS))
-    let scoreDecreasePercentPerDay = ESBTContract.try_scoreDecreasePercentPerDay()
-    log.info("????????????????????scoreDecreasePercentPerDay: {}",[scoreDecreasePercentPerDay.value.toString()])
-
 
     if (event.params._reasonCode.equals(BigInt.fromI32(0))) {
         log.info("#####################ScoreUpdate: _reasonCode = 0", []);
@@ -28,12 +23,6 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         const newMemberAddress =  event.params._fromAccount.toHex()
 
 
-        const refCodeOwnerSizeSum = ESBTContract.userSizeSum(Address.fromString(refCodeOwnerAddress))
-        // const newMemberSizeSum = ESBT.bind(Address.fromString(ESBT_ADDRESS)).userSizeSum(Address.fromString(newMemberAddress))
-        log.info("**********************refCodeOwnerSizeSum: {}", [refCodeOwnerSizeSum.toString()])
-        // log.info("**********************newMemberSizeSum: {}", [newMemberSizeSum.toString()])
-
-
         let account = Account.load(refCodeOwnerAddress)
         if (account === null) {
             // log.info("##########create refCodeOwner :{}", [event.params._account.toHex()]);
@@ -44,6 +33,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             account.sons = []
             account.pointHistory = []
             account.invitedTimestamp = "0"
+            account.totalPoints = "0"
 
             account.save()
         }
@@ -58,6 +48,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             newMember.sons = []
             newMember.pointHistory = []
             newMember.invitedTimestamp = timestamp
+            account.totalPoints = "0"
 
             newMember.save()
         }
@@ -79,6 +70,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         let accountPointHistoryList = account.pointHistory
         accountPointHistoryList.push(pointHistory.id)
         account.pointHistory = accountPointHistoryList
+        account.totalPoints = (BigInt.fromString("10000000000000000000").plus(BigInt.fromString(account.totalPoints))).toString()
 
         account.save()
         newMember.save()
@@ -109,6 +101,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             addScoreToAccount.sons = []
             addScoreToAccount.pointHistory = []
             addScoreToAccount.invitedTimestamp = "0"
+            addScoreToAccount.totalPoints = "0"
         }
         let pointHistoryList = addScoreToAccount.pointHistory
         pointHistoryList.push(pointHistory.id)
@@ -145,10 +138,12 @@ export function handleScoreDecrease(event: ScoreDecrease): void {
         addScoreToAccount.sons = []
         addScoreToAccount.pointHistory = []
         addScoreToAccount.invitedTimestamp = "0"
+        addScoreToAccount.totalPoints = "0"
     }
     let pointHistoryList = addScoreToAccount.pointHistory
     pointHistoryList.push(pointHistory.id)
     addScoreToAccount.pointHistory = pointHistoryList
+    addScoreToAccount.totalPoints = BigInt.fromString(addScoreToAccount.totalPoints).minus(BigInt.fromString(score)).toString()
 
     pointHistory.save()
     addScoreToAccount.save()
