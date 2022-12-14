@@ -52,6 +52,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
 
             newMember.save()
         }
+        newMember.parent = refCodeOwnerAddress
         newMember.invitedTimestamp = timestamp
 
 
@@ -73,10 +74,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         account.save()
         newMember.save()
         pointHistory.save()
-
-
     }else {
-
         //add score
         let reasonCode = event.params._reasonCode.toString()
         let addScoreToAddress = event.params._account.toHex()
