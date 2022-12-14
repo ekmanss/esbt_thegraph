@@ -1,15 +1,30 @@
-import {BigInt, log} from "@graphprotocol/graph-ts"
+import {Address, BigInt, log} from "@graphprotocol/graph-ts"
 import {
     ESBT,
     ScoreUpdate,
     ScoreDecrease
 } from "../generated/ESBT/ESBT"
-import {ExampleEntity,Account,PointHistory} from "../generated/schema"
+import {ExampleEntity,Account,PointHistory, CommonDataStore} from "../generated/schema"
 
 export function handleScoreUpdate(event: ScoreUpdate): void {
     const timestamp = event.block.timestamp.toString()
 
     if (event.params._reasonCode.equals(BigInt.fromI32(0))) {
+        let totalMintedCounter = CommonDataStore.load("totalMintedCounter")
+        if(totalMintedCounter === null){
+            totalMintedCounter = new CommonDataStore("totalMintedCounter")
+            totalMintedCounter.value = "1"
+
+            totalMintedCounter.save()
+        }else {
+            totalMintedCounter.value = BigInt.fromString(totalMintedCounter.value).plus(BigInt.fromI32(1)).toString()
+
+            totalMintedCounter.save()
+        }
+
+
+
+
         log.info("#####################ScoreUpdate: _reasonCode = 0", []);
         log.info(
             "#####################refCodeOwner: {} , newMember: {} , initPoint: {}",
@@ -23,8 +38,6 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         const newMemberAddress =  event.params._fromAccount.toHex()
 
 
-
-
         let account = Account.load(refCodeOwnerAddress)
         if (account === null) {
             // log.info("##########create refCodeOwner :{}", [event.params._account.toHex()]);
@@ -35,6 +48,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             account.sons = []
             account.pointHistory = []
             account.invitedTimestamp = "0"
+            account.totalPoints = "0"
 
             account.save()
         }
@@ -49,9 +63,11 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             newMember.sons = []
             newMember.pointHistory = []
             newMember.invitedTimestamp = timestamp
+            account.totalPoints = "0"
 
             newMember.save()
         }
+        newMember.parent = refCodeOwnerAddress
         newMember.invitedTimestamp = timestamp
 
 
@@ -69,14 +85,13 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         let accountPointHistoryList = account.pointHistory
         accountPointHistoryList.push(pointHistory.id)
         account.pointHistory = accountPointHistoryList
+        let newTotalPoints = (BigInt.fromString("10000000000000000000").plus(BigInt.fromString(account.totalPoints))).toString()
+        account.totalPoints = newTotalPoints
 
         account.save()
         newMember.save()
         pointHistory.save()
-
-
     }else {
-
         //add score
         let reasonCode = event.params._reasonCode.toString()
         let addScoreToAddress = event.params._account.toHex()
@@ -102,10 +117,12 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             addScoreToAccount.sons = []
             addScoreToAccount.pointHistory = []
             addScoreToAccount.invitedTimestamp = "0"
+            addScoreToAccount.totalPoints = "0"
         }
         let pointHistoryList = addScoreToAccount.pointHistory
         pointHistoryList.push(pointHistory.id)
         addScoreToAccount.pointHistory = pointHistoryList
+        addScoreToAccount.totalPoints = (BigInt.fromString(score).plus(BigInt.fromString(addScoreToAccount.totalPoints))).toString()
 
 
         pointHistory.save()
@@ -138,10 +155,13 @@ export function handleScoreDecrease(event: ScoreDecrease): void {
         addScoreToAccount.sons = []
         addScoreToAccount.pointHistory = []
         addScoreToAccount.invitedTimestamp = "0"
+        addScoreToAccount.totalPoints = "0"
     }
     let pointHistoryList = addScoreToAccount.pointHistory
     pointHistoryList.push(pointHistory.id)
     addScoreToAccount.pointHistory = pointHistoryList
+    let newTotalPoints = BigInt.fromString(addScoreToAccount.totalPoints).minus(BigInt.fromString(score)).toString()
+    addScoreToAccount.totalPoints = newTotalPoints
 
     pointHistory.save()
     addScoreToAccount.save()

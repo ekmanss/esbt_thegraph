@@ -13,6 +13,7 @@ type Account @entity {
   sons: [Account!]!
   pointHistory: [PointHistory!]!
   invitedTimestamp: String!
+  totalPoints: String!
 }
 
 type PointHistory @entity {
@@ -22,4 +23,9 @@ type PointHistory @entity {
   point: String!
   account: Account!
   typeCode: String!
+}
+
+type CommonDataStore @entity {
+  id: ID!
+  value: String!
 }
