@@ -4,25 +4,26 @@ import {
     ScoreUpdate,
     ScoreDecrease
 } from "../generated/ESBT/ESBT"
-import {ExampleEntity,Account,PointHistory, CommonDataStore} from "../generated/schema"
+import {ExampleEntity, Account, PointHistory, CommonDataStore} from "../generated/schema"
+
+const startTimestamp = "1672819200";
+const endTimestamp = "1675152000";
 
 export function handleScoreUpdate(event: ScoreUpdate): void {
     const timestamp = event.block.timestamp.toString()
 
     if (event.params._reasonCode.equals(BigInt.fromI32(0))) {
         let totalMintedCounter = CommonDataStore.load("totalMintedCounter")
-        if(totalMintedCounter === null){
+        if (totalMintedCounter === null) {
             totalMintedCounter = new CommonDataStore("totalMintedCounter")
             totalMintedCounter.value = "1"
 
             totalMintedCounter.save()
-        }else {
+        } else {
             totalMintedCounter.value = BigInt.fromString(totalMintedCounter.value).plus(BigInt.fromI32(1)).toString()
 
             totalMintedCounter.save()
         }
-
-
 
 
         log.info("#####################ScoreUpdate: _reasonCode = 0", []);
@@ -35,7 +36,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             ]
         )
         const refCodeOwnerAddress = event.params._account.toHex()
-        const newMemberAddress =  event.params._fromAccount.toHex()
+        const newMemberAddress = event.params._fromAccount.toHex()
 
 
         let account = Account.load(refCodeOwnerAddress)
@@ -55,7 +56,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         }
 
         let newMember = Account.load(newMemberAddress)
-        if(newMember === null){
+        if (newMember === null) {
             // log.info("##########create newMember :{}", [event.params._account.toHex()]);
             newMember = new Account(newMemberAddress)
             newMember.parent = refCodeOwnerAddress
@@ -93,7 +94,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         account.save()
         newMember.save()
         pointHistory.save()
-    }else {
+    } else {
         //add score
         let reasonCode = event.params._reasonCode.toString()
         let addScoreToAddress = event.params._account.toHex()
@@ -111,7 +112,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
 
 
         let addScoreToAccount = Account.load(addScoreToAddress)
-        if(addScoreToAccount === null){
+        if (addScoreToAccount === null) {
             addScoreToAccount = new Account(addScoreToAddress)
             addScoreToAccount.createdTimestamp = timestamp
             addScoreToAccount.address = addScoreToAddress
@@ -126,10 +127,12 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         pointHistoryList.push(pointHistory.id)
         addScoreToAccount.pointHistory = pointHistoryList
         addScoreToAccount.totalPoints = (BigInt.fromString(score).plus(BigInt.fromString(addScoreToAccount.totalPoints))).toString()
-        if(event.params._reasonCode.equals(BigInt.fromI32(11)) || event.params._reasonCode.equals(BigInt.fromI32(111)) || event.params._reasonCode.equals(BigInt.fromI32(12)) || event.params._reasonCode.equals(BigInt.fromI32(13)) || event.params._reasonCode.equals(BigInt.fromI32(113))){
-            addScoreToAccount.invitedScore = (BigInt.fromString(score).plus(BigInt.fromString(addScoreToAccount.invitedScore))).toString()
-        }
 
+        if (BigInt.fromString(timestamp).gt(BigInt.fromString(startTimestamp)) && BigInt.fromString(timestamp).lt(BigInt.fromString(endTimestamp))) {
+            if (event.params._reasonCode.equals(BigInt.fromI32(11)) || event.params._reasonCode.equals(BigInt.fromI32(111)) || event.params._reasonCode.equals(BigInt.fromI32(12)) || event.params._reasonCode.equals(BigInt.fromI32(13)) || event.params._reasonCode.equals(BigInt.fromI32(113))) {
+                addScoreToAccount.invitedScore = (BigInt.fromString(score).plus(BigInt.fromString(addScoreToAccount.invitedScore))).toString()
+            }
+        }
 
         pointHistory.save()
         addScoreToAccount.save()
@@ -143,7 +146,7 @@ export function handleScoreDecrease(event: ScoreDecrease): void {
     let score = event.params._amount.toString()
     const timestamp = event.block.timestamp.toString()
 
-    log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!decrease score: addScoreToAddress = {} ,  score = {}", [addScoreToAddress,score]);
+    log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!decrease score: addScoreToAddress = {} ,  score = {}", [addScoreToAddress, score]);
     let pointHistory = new PointHistory(addScoreToAddress.concat("-").concat(timestamp).concat("-").concat(score))
     pointHistory.increase = false
     pointHistory.timestamp = timestamp
@@ -153,7 +156,7 @@ export function handleScoreDecrease(event: ScoreDecrease): void {
 
 
     let addScoreToAccount = Account.load(addScoreToAddress)
-    if(addScoreToAccount === null){
+    if (addScoreToAccount === null) {
         addScoreToAccount = new Account(addScoreToAddress)
         addScoreToAccount.createdTimestamp = timestamp
         addScoreToAccount.address = addScoreToAddress
