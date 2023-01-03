@@ -49,6 +49,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             account.pointHistory = []
             account.invitedTimestamp = "0"
             account.totalPoints = "0"
+            account.invitedScore = "0"
 
             account.save()
         }
@@ -64,6 +65,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             newMember.pointHistory = []
             newMember.invitedTimestamp = timestamp
             account.totalPoints = "0"
+            account.invitedScore = "0"
 
             newMember.save()
         }
@@ -118,11 +120,15 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             addScoreToAccount.pointHistory = []
             addScoreToAccount.invitedTimestamp = "0"
             addScoreToAccount.totalPoints = "0"
+            addScoreToAccount.invitedScore = "0"
         }
         let pointHistoryList = addScoreToAccount.pointHistory
         pointHistoryList.push(pointHistory.id)
         addScoreToAccount.pointHistory = pointHistoryList
         addScoreToAccount.totalPoints = (BigInt.fromString(score).plus(BigInt.fromString(addScoreToAccount.totalPoints))).toString()
+        if(reasonCode === "11" || reasonCode === "111" || reasonCode === "12" || reasonCode === "13" || reasonCode === "113"){
+            addScoreToAccount.invitedScore = (BigInt.fromString(score).plus(BigInt.fromString(addScoreToAccount.invitedScore))).toString()
+        }
 
 
         pointHistory.save()
@@ -156,6 +162,7 @@ export function handleScoreDecrease(event: ScoreDecrease): void {
         addScoreToAccount.pointHistory = []
         addScoreToAccount.invitedTimestamp = "0"
         addScoreToAccount.totalPoints = "0"
+        addScoreToAccount.invitedScore = "0"
     }
     let pointHistoryList = addScoreToAccount.pointHistory
     pointHistoryList.push(pointHistory.id)
