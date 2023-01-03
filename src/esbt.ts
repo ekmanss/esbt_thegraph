@@ -126,7 +126,7 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
         pointHistoryList.push(pointHistory.id)
         addScoreToAccount.pointHistory = pointHistoryList
         addScoreToAccount.totalPoints = (BigInt.fromString(score).plus(BigInt.fromString(addScoreToAccount.totalPoints))).toString()
-        if(reasonCode === "11" || reasonCode === "111" || reasonCode === "12" || reasonCode === "13" || reasonCode === "113"){
+        if(event.params._reasonCode.equals(BigInt.fromI32(11)) || event.params._reasonCode.equals(BigInt.fromI32(111)) || event.params._reasonCode.equals(BigInt.fromI32(12)) || event.params._reasonCode.equals(BigInt.fromI32(13)) || event.params._reasonCode.equals(BigInt.fromI32(113))){
             addScoreToAccount.invitedScore = (BigInt.fromString(score).plus(BigInt.fromString(addScoreToAccount.invitedScore))).toString()
         }
 
