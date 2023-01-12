@@ -65,8 +65,8 @@ export function handleScoreUpdate(event: ScoreUpdate): void {
             newMember.sons = []
             newMember.pointHistory = []
             newMember.invitedTimestamp = timestamp
-            account.totalPoints = "0"
-            account.invitedScore = "0"
+            newMember.totalPoints = "0"
+            newMember.invitedScore = "0"
 
             newMember.save()
         }
