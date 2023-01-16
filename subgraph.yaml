@@ -6,9 +6,9 @@ dataSources:
     name: ESBT
     network: Binance
     source:
-      address: "0xF425637626Fa48017139caE6717cc2C1572a3c24"
+      address: "0x7fA3Bb8DA60A1699ed1fAb87214a9A1F8B328440"
       abi: ESBT
-      startBlock: 26222810
+      startBlock: 26308470
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
